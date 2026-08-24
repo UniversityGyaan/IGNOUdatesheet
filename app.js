@@ -1,29 +1,61 @@
 // app.js
-// इसमें केवल फंक्शनलिटी और लॉजिक है।
-
 let userSelectedCodes = [];
+let allCodes = [];
 
 window.onload = function() {
-  const allCodes = new Set();
-  datesheetData.forEach(entry => entry.codes.forEach(c => allCodes.add(c)));
+  const codesSet = new Set();
+  datesheetData.forEach(entry => entry.codes.forEach(c => codesSet.add(c)));
+  allCodes = Array.from(codesSet).sort();
   
-  const datalist = document.getElementById('courseList');
-  Array.from(allCodes).sort().forEach(code => {
-    const option = document.createElement('option');
-    option.value = code;
-    datalist.appendChild(option);
-  });
-  
+  // Enter key support
   document.getElementById("courseInput").addEventListener("keypress", function(event) {
     if (event.key === "Enter") {
       event.preventDefault();
       addCourseCode();
     }
   });
+
+  // Hide suggestions when clicking outside
+  document.addEventListener("click", function(event) {
+    const inputEl = document.getElementById("courseInput");
+    const suggestionBox = document.getElementById("suggestionBox");
+    if (event.target !== inputEl && event.target !== suggestionBox) {
+      suggestionBox.style.display = "none";
+    }
+  });
 };
+
+// Show Custom Suggestions
+function showSuggestions() {
+  const inputEl = document.getElementById("courseInput");
+  const suggestionBox = document.getElementById("suggestionBox");
+  const val = inputEl.value.trim().toUpperCase();
+
+  let matchedCodes = allCodes;
+  if (val) {
+    matchedCodes = allCodes.filter(c => c.includes(val));
+  }
+
+  if (matchedCodes.length > 0) {
+    suggestionBox.innerHTML = matchedCodes.map(code => 
+      `<div class="suggestion-item" onclick="selectSuggestion('${code}')">${code}</div>`
+    ).join('');
+    suggestionBox.style.display = "block";
+  } else {
+    suggestionBox.style.display = "none";
+  }
+}
+
+// Select from suggestions
+function selectSuggestion(code) {
+  document.getElementById("courseInput").value = code;
+  document.getElementById("suggestionBox").style.display = "none";
+  addCourseCode(); // Automatically add when selected
+}
 
 function addCourseCode() {
   const inputEl = document.getElementById("courseInput");
+  const suggestionBox = document.getElementById("suggestionBox");
   const code = inputEl.value.trim().toUpperCase().replace(/[^A-Z0-9]/g, "");
   
   if (!code) return; 
@@ -36,6 +68,7 @@ function addCourseCode() {
   }
   
   inputEl.value = ""; 
+  suggestionBox.style.display = "none"; // Hide box after adding
   inputEl.focus();    
 }
 
