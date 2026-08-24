@@ -17,9 +17,10 @@ window.onload = function() {
 
   // Hide suggestions when clicking outside
   document.addEventListener("click", function(event) {
-    const inputEl = document.getElementById("courseInput");
+    const searchGroup = document.querySelector(".search-add-group");
     const suggestionBox = document.getElementById("suggestionBox");
-    if (event.target !== inputEl && event.target !== suggestionBox) {
+    // अगर क्लिक सर्च एरिया के बाहर हुआ है, तभी ड्रॉपडाउन हाईड करें
+    if (searchGroup && !searchGroup.contains(event.target)) {
       suggestionBox.style.display = "none";
     }
   });
@@ -37,7 +38,9 @@ function showSuggestions() {
   }
 
   if (matchedCodes.length > 0) {
-    suggestionBox.innerHTML = matchedCodes.map(code => 
+    // मोबाइल पर स्पीड स्मूथ रखने के लिए सिर्फ टॉप 50 सजेशन्स दिखाएं
+    const topMatches = matchedCodes.slice(0, 50);
+    suggestionBox.innerHTML = topMatches.map(code => 
       `<div class="suggestion-item" onclick="selectSuggestion('${code}')">${code}</div>`
     ).join('');
     suggestionBox.style.display = "block";
@@ -68,7 +71,7 @@ function addCourseCode() {
   }
   
   inputEl.value = ""; 
-  suggestionBox.style.display = "none"; // Hide box after adding
+  suggestionBox.style.display = "none"; 
   inputEl.focus();    
 }
 
