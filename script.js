@@ -1,6 +1,4 @@
 // data.js
-// इसमें केवल IGNOU डेटशीट का डेटा स्टोर किया जाएगा
-
 const datesheetData = [
   { date: "25.11.2026", day: "WED", shift: "Morning", timing: "10:00 AM TO 1:00 PM", codes: ["MS01","PHE11","MAL001","MUD021","MSL010","MAW001","MIS025","MBC007","BANC133","BECC133","BSOE145"] },
   { date: "25.11.2026", day: "WED", shift: "Evening", timing: "2:00 PM TO 5:00 PM", codes: ["MEV003","MUD001","CHE04","ECO11","MBG001","MER001","MFL001","MEDS051","MMPC014","BEYE022","MCS061","MHN001","MJY001","MPC001","MST011","MFN001","MGG001","BCHET147","BPHCT131","BHIE141","BPCE145","BANC101"] },
