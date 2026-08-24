@@ -1,49 +1,157 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EduBytes India - IGNOU Schedule Generator</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IGNOU Datesheet Checker - Dec 2026 | University Gyaan</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-grad: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%);
+      --card-grad: linear-gradient(145deg, #ffffff, #f1f5f9);
+      --btn-grad: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+      --accent-grad: linear-gradient(135deg, #3b82f6, #06b6d4);
+      --morning-color: #0284c7;
+      --evening-color: #e11d48;
+      --shadow-3d: 0 12px 25px -4px rgba(99, 102, 241, 0.35), 0 8px 10px -6px rgba(99, 102, 241, 0.2);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
+
+    body {
+      background: #0f172a;
+      background-image: radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.25) 0px, transparent 50%), radial-gradient(at 100% 100%, rgba(236, 72, 153, 0.2) 0px, transparent 50%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 16px 12px;
+      color: #1e293b;
+    }
+
+    .container { width: 100%; max-width: 580px; margin: auto; }
+
+    /* Header */
+    .header-card {
+      background: var(--primary-grad); border-radius: 24px; padding: 24px 20px;
+      text-align: center; color: #ffffff; box-shadow: var(--shadow-3d);
+      position: relative; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.25);
+      margin-bottom: 20px;
+    }
+    .header-card h1 { font-size: 1.55rem; font-weight: 800; line-height: 1.25; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); margin-bottom: 4px; }
+    .header-badge { display: inline-block; background: rgba(255, 255, 255, 0.2); padding: 5px 14px; border-radius: 50px; font-size: 0.78rem; font-weight: 700; text-transform: uppercase; margin-bottom: 8px; border: 1px solid rgba(255, 255, 255, 0.3); }
+
+    /* App Box */
+    .app-box { background: #ffffff; border-radius: 22px; padding: 20px 16px; box-shadow: 0 20px 30px rgba(0, 0, 0, 0.25); margin-bottom: 20px; }
+    .input-label { font-size: 0.9rem; font-weight: 700; color: #334155; display: block; margin-bottom: 8px; }
+    
+    .search-add-group { display: flex; gap: 10px; margin-bottom: 12px; }
+    input[type="text"] { flex: 1; padding: 12px 14px; border-radius: 14px; border: 2px solid #e2e8f0; background: #f8fafc; font-size: 0.92rem; font-weight: 600; text-transform: uppercase; outline: none; }
+    input[type="text"]:focus { border-color: #7c3aed; background: #ffffff; box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.15); }
+    
+    .btn-add { background: var(--accent-grad); color: white; border: none; border-radius: 14px; padding: 0 16px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 12px rgba(6, 182, 212, 0.3), 0 3px 0 #0284c7; }
+    .btn-add:active { transform: translateY(3px); box-shadow: 0 2px 6px rgba(6, 182, 212, 0.3); }
+
+    /* Chips */
+    .chips-container { display: flex; flex-wrap: wrap; gap: 8px; min-height: 40px; padding: 10px; background: #f8fafc; border-radius: 14px; border: 1px dashed #cbd5e1; margin-bottom: 14px; }
+    .chip { background: linear-gradient(135deg, #e0e7ff, #c7d2fe); color: #3730a3; padding: 6px 10px 6px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: 700; display: flex; align-items: center; gap: 8px; border: 1px solid #a5b4fc; }
+    .chip-close { background: #ffffff; color: #ef4444; border-radius: 50%; width: 22px; height: 22px; display: flex; justify-content: center; align-items: center; cursor: pointer; font-weight: 800; font-size: 0.8rem; }
+
+    /* Action Buttons */
+    .btn-row { display: flex; gap: 10px; margin-top: 14px; }
+    .btn-3d { flex: 1; padding: 13px; border: none; border-radius: 14px; font-size: 0.92rem; font-weight: 700; color: #ffffff; cursor: pointer; }
+    .btn-search { background: var(--btn-grad); box-shadow: 0 6px 16px rgba(124, 58, 237, 0.4), 0 3px 0 #3730a3; }
+    .btn-clear { flex: 0.4; background: #f1f5f9; color: #64748b; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05), 0 3px 0 #cbd5e1; }
+
+    /* Results */
+    .results-wrap { display: none; margin-top: 20px; }
+    .results-title { font-size: 1rem; font-weight: 800; color: #ffffff; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .badge-count { background: #22c55e; color: white; font-size: 0.75rem; padding: 3px 10px; border-radius: 20px; }
+    
+    .table-container { width: 100%; overflow-x: auto; background: #ffffff; border-radius: 18px; box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2); }
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.82rem; }
+    thead { background: #f8fafc; border-bottom: 2px solid #e2e8f0; }
+    th { padding: 12px 10px; color: #475569; font-weight: 700; text-transform: uppercase; font-size: 0.72rem; }
+    td { padding: 12px 10px; border-bottom: 1px solid #f1f5f9; font-weight: 600; }
+    .code-chip { background: #e0e7ff; color: #4338ca; padding: 4px 8px; border-radius: 8px; }
+    .shift-tag { font-size: 0.75rem; padding: 3px 8px; border-radius: 6px; }
+    .shift-morning { background: #e0f2fe; color: var(--morning-color); }
+    .shift-evening { background: #ffe4e6; color: var(--evening-color); }
+    .print-btn { width: 100%; background: #1e293b; color: white; margin-top: 14px; padding: 12px; border-radius: 12px; border: none; font-weight: 700; cursor: pointer; }
+
+    /* Branding & Footer */
+    .footer-brand { text-align: center; margin-top: 30px; margin-bottom: 20px; color: #cbd5e1; }
+    .brand-logo-wrap { display: flex; align-items: center; justify-content: center; gap: 10px; margin: 8px 0 16px 0; color: #ffffff; font-size: 1.3rem; font-weight: 800; }
+    .brand-logo-wrap img { height: 35px; border-radius: 8px; } /* Adjust Logo Size */
+    .join-btn { background: linear-gradient(135deg, #10b981, #059669); color: white; text-decoration: none; padding: 10px 24px; border-radius: 50px; font-weight: 700; display: inline-block; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); transition: transform 0.2s ease; }
+    .join-btn:active { transform: translateY(2px); }
+
+    @media print {
+      body { background: white; color: black; padding: 0; }
+      .app-box, .print-btn, .footer-brand { display: none !important; }
+      .results-wrap { display: block !important; }
+      .header-card { background: none; color: black; box-shadow: none; border: none; padding: 0; margin-bottom: 20px;}
+    }
+  </style>
 </head>
 <body>
 
-    <div class="container">
-        <img src="logo.png" alt="EduBytes India Logo" class="logo-img">
-        <h1>EduBytes India</h1>
-
-        <div class="social-links">
-            <a href="https://t.me/EduBytes_India" target="_blank" class="social-link telegram">Join Telegram</a>
-            <a href="https://www.youtube.com/@EduByteIndia" target="_blank" class="social-link youtube">Subscribe YouTube</a>
-        </div>
-
-        <div class="manual-selection-area">
-            <label for="paperCodeSelect">Select Your Course and Add to List</label>
-            <div class="input-group">
-                <select id="paperCodeSelect">
-                    <option value="">-- Choose Your Course Code --</option>
-                </select>
-                <button id="addCodeBtn" onclick="addCode()">+ Add Course</button>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label>Your Selected Courses:</label>
-            <div id="selectedCodesContainer"></div>
-        </div>
-
-        <div class="button-group">
-            <button id="generateBtn" onclick="generateSchedule()">Generated Paper Schedule</button>
-            <button id="resetBtn" onclick="resetAll()">Reset</button>
-        </div>
-
-        <div id="scheduleResult"></div>
-        
-        <div id="instructions" class="instructions-container"></div>
-
+  <div class="container">
+    <div class="header-card">
+      <span class="header-badge">Tentative Schedule</span>
+      <h1>IGNOU Datesheet</h1>
+      <p>December 2026 Term End Exams</p>
     </div>
 
-    <script src="script.js"></script>
+    <div class="app-box">
+      <label class="input-label" for="courseInput">Search or Type Course Code:</label>
+      
+      <div class="search-add-group">
+        <input type="text" id="courseInput" list="courseList" placeholder="e.g. BEVAE181" autocomplete="off">
+        <datalist id="courseList"></datalist>
+        <button class="btn-add" onclick="addCourseCode()">➕ Add</button>
+      </div>
 
+      <div class="chips-container" id="chipsContainer">
+        <span style="color:#94a3b8; font-size: 0.8rem; line-height: 28px;">No codes added yet. Add codes above.</span>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn-3d btn-search" onclick="generateDatesheet()">🔍 Generate Datesheet</button>
+        <button class="btn-3d btn-clear" onclick="clearAll()">Clear</button>
+      </div>
+    </div>
+
+    <div id="resultsWrap" class="results-wrap">
+      <div class="results-title">
+        <span>Generated Date Sheet</span>
+        <span id="matchCount" class="badge-count">0 Exams</span>
+      </div>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr><th>S. No.</th><th>Date & Day</th><th>Exam Code</th><th>Shift</th><th>Timings</th></tr>
+          </thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+      <button class="print-btn" onclick="window.print()">🖨️ Print / Save as PDF</button>
+    </div>
+
+    <!-- Powered By Section -->
+    <div class="footer-brand">
+      <p style="font-size: 0.85rem; font-weight: 600;">Powered by</p>
+      <div class="brand-logo-wrap">
+        <!-- यहाँ src="" में University Gyaan के Logo का URL डाल दें -->
+        <img src="YOUR_LOGO_IMAGE_URL.png" alt="Logo" onerror="this.style.display='none'"> 
+        <span>University Gyaan</span>
+      </div>
+      <a href="https://universitygyaan.github.io/Join-Us/" target="_blank" class="join-btn">🔗 Join Us</a>
+    </div>
+
+  </div>
+
+  <!-- Data and Logic Files Attached Here -->
+  <script src="data.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
